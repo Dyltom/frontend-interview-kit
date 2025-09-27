@@ -104,7 +104,7 @@ describe('Dropdown', () => {
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAttribute('aria-labelledby');
 
-    const selectedOption = screen.getByText('Option 2');
+    const selectedOption = screen.getByRole('option', { name: 'Option 2' });
     expect(selectedOption).toHaveAttribute('aria-selected', 'true');
   });
 });
