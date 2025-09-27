@@ -1,86 +1,188 @@
-# Project Name
+# Frontend Interview Kit
 
-## Problem
+A comprehensive React + TypeScript boilerplate optimized for frontend technical interviews. Built with modern tools and best practices, this kit includes everything you need to quickly build performant, accessible web applications during coding challenges.
 
-[Describe the problem this project solves in 1-2 sentences]
+## ✨ Features
 
-## Scenarios & Constraints
+### 🛠 Core Setup
+- **React 18** with TypeScript in strict mode
+- **Vite** for lightning-fast HMR and builds
+- **Vitest** for unit testing with coverage reports
+- **ESLint + Prettier** pre-configured
+- **MSW** for API mocking in tests
 
-- **User Goals**: [What users want to achieve]
-- **Technical Constraints**: [Time limits, browser support, etc.]
-- **Performance Requirements**: [Load time, FPS, memory usage]
+### 🎯 Interview-Ready Utilities
 
-## Architecture & State Model
+#### Async Operations
+- `fetchJSON` - Abortable fetch with retry logic and timeouts
+- `debounce` & `throttle` - Control function execution frequency
+- `memoize` - Cache expensive computations
+- `once` - Ensure single execution
 
-### Components
-- **Component A**: [Purpose and responsibility]
-- **Component B**: [Purpose and responsibility]
+#### Canvas Utilities
+- DPI-aware canvas setup
+- Shape drawing (rectangles, circles, text)
+- Hit testing for interactive graphics
+- Export canvas to PNG/JPEG
 
-### State Shape
-```typescript
-interface AppState {
-  // Define your state structure
-}
-```
+#### DOM & Accessibility
+- Keyboard navigation helpers
+- Focus trapping for modals
+- Screen reader announcements
+- ARIA-compliant patterns
 
-### Data Flow
-1. User interaction triggers...
-2. State update via...
-3. Re-render causes...
+#### React Hooks
+- `useDebounce` - Debounce values
+- `useAsync` - Manage async operations with cancellation
+- `useIntersectionObserver` - Detect element visibility
+- `useVirtualList` - Virtualize large lists
 
-## Implementation
+### 📦 Components
+- **Dropdown** - Fully accessible with keyboard navigation
+- **VirtualList** - Efficiently render thousands of items
 
-### Key Features
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-
-### Acceptance Criteria
-- [ ] Works with keyboard only
-- [ ] Accessible to screen readers
-- [ ] Performs well with large datasets
-- [ ] Handles errors gracefully
-
-## Trade-offs & Alternatives
-
-### Decisions Made
-- **Choice A over B**: [Reasoning]
-- **Technology X**: [Why this was selected]
-
-### What I'd Do With More Time
-- Implement feature Y
-- Optimize for Z
-- Add comprehensive E2E tests
-
-## Results & Metrics
-
-- **Performance**: [Lighthouse scores, FPS, etc.]
-- **Bundle Size**: X KB gzipped
-- **Test Coverage**: X%
-- **Accessibility**: WCAG AA compliant
-
-## Getting Started
+## 🚀 Quick Start
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/frontend-interview-kit.git
+
 # Install dependencies
 npm install
 
-# Run development server
+# Start development server
 npm run dev
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
 ```
 
-## Demo
+## 📝 Scripts
 
-[Link to deployed version or GIF]
+| Command | Description |
+|---------|------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm test` | Run tests |
+| `npm run test:ui` | Run tests with UI |
+| `npm run test:coverage` | Generate coverage report |
+| `npm run typecheck` | Check TypeScript types |
+| `npm run lint` | Lint code |
+| `npm run format` | Format with Prettier |
 
-## Next Steps
+## 🏗 Project Structure
 
-1. [Priority 1 improvement]
-2. [Priority 2 improvement]
-3. [Priority 3 improvement]
+```
+src/
+├── components/          # React components
+│   ├── Dropdown.tsx    # Accessible dropdown
+│   └── VirtualList.tsx # Virtual scrolling
+├── hooks/              # Custom React hooks
+│   ├── useAsync.ts
+│   ├── useDebounce.ts
+│   └── useIntersectionObserver.ts
+├── utils/              # Utility functions
+│   ├── async.ts        # Async operations
+│   ├── canvas.ts       # Canvas helpers
+│   └── dom.ts          # DOM utilities
+├── types/              # TypeScript types
+└── styles/             # CSS files
+```
+
+## 💡 Usage Examples
+
+### Abortable Fetch with Retry
+
+```typescript
+import { fetchJSON } from '@utils/async';
+
+const controller = new AbortController();
+
+const result = await fetchJSON<User>('/api/user', {
+  signal: controller.signal,
+  retries: 3,
+  timeout: 5000
+});
+
+if (result.ok) {
+  console.log(result.value);
+} else {
+  console.error(result.error);
+}
+```
+
+### Virtual List
+
+```tsx
+import { VirtualList } from '@components/VirtualList';
+
+function App() {
+  const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
+
+  return (
+    <VirtualList
+      items={items}
+      rowHeight={50}
+      height={400}
+      renderItem={(item) => <div>{item}</div>}
+    />
+  );
+}
+```
+
+### Canvas Drawing
+
+```typescript
+import { setupCanvas, drawRect, hitTestRect } from '@utils/canvas';
+
+const canvas = document.querySelector('canvas')!;
+const ctx = setupCanvas(canvas);
+
+const rect = {
+  id: '1',
+  x: 10,
+  y: 10,
+  width: 100,
+  height: 50,
+  fill: '#3b82f6'
+};
+
+drawRect(ctx, rect);
+
+canvas.addEventListener('click', (e) => {
+  const point = { x: e.offsetX, y: e.offsetY };
+  if (hitTestRect(rect, point)) {
+    console.log('Rectangle clicked!');
+  }
+});
+```
+
+## 🎯 Interview Tips
+
+### Time Management
+1. Spend 5-10 minutes understanding requirements
+2. Build in thin slices - get something working quickly
+3. Add tests for critical paths
+4. Leave time for cleanup and documentation
+
+### Code Quality
+- Use TypeScript's strict mode
+- Keep components small and focused
+- Extract reusable logic into hooks
+- Add accessibility from the start
+- Handle errors gracefully
+
+### Communication
+- Narrate your thought process
+- Explain trade-offs
+- Mark TODOs for future improvements
+- Ask clarifying questions early
+
+## 📄 License
+
+MIT
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+Built with ❤️ for frontend developers preparing for technical interviews.

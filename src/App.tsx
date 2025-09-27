@@ -5,7 +5,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Canva Interview Prep Project</h1>
+      <h1>Frontend Interview Kit</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           Count is {count}
