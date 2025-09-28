@@ -61,7 +61,7 @@
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  cursor: crosshair !important;
+  cursor: url('/cursor-pointer.svg') 10 8, pointer;
   transition: all 0.2s;
   position: relative;
   overflow: hidden;

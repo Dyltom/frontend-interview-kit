@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Matrix cursor arrow -->
+  <g filter="url(#glow)">
+    <path d="M 4 4 L 4 20 L 10 14 L 14 22 L 18 20 L 14 12 L 20 12 Z"
+          fill="#00ff41"
+          stroke="#00ff41"
+          stroke-width="0.5"
+          opacity="0.9"/>
+    <!-- Glow dot at tip -->
+    <circle cx="4" cy="4" r="2" fill="#00ff41" opacity="1"/>
+  </g>
+</svg>

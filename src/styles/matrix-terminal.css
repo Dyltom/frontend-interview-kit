@@ -21,10 +21,6 @@
 }
 
 /* Global terminal styles */
-* {
-  cursor: none !important;
-}
-
 body {
   background: var(--matrix-black);
   color: var(--matrix-green-100);
@@ -33,6 +29,7 @@ body {
   position: relative;
   margin: 0;
   padding: 0;
+  cursor: url('/cursor-default.svg') 4 4, default;
 }
 
 /* CRT Monitor Effect Container */
@@ -467,5 +464,33 @@ body {
 
   .ascii-art {
     font-size: 0.6rem;
+  }
+}
+
+/* Matrix Custom Cursor Styles */
+a, button, .control-button, .terminal-button {
+  cursor: url('/cursor-pointer.svg') 10 8, pointer;
+}
+
+input, textarea {
+  cursor: text;
+}
+
+select {
+  cursor: url('/cursor-pointer.svg') 10 8, pointer;
+}
+
+/* Ensure cursor visibility */
+* {
+  cursor: inherit;
+}
+
+/* Hover state animations */
+@media (hover: hover) {
+  button:hover,
+  a:hover,
+  .control-button:hover,
+  .terminal-button:hover {
+    cursor: url('/cursor-pointer.svg') 10 8, pointer !important;
   }
 }
