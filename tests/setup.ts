@@ -23,13 +23,20 @@ afterEach(() => {
   server.resetHandlers();
 });
 
-// Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
+// Mock IntersectionObserver with proper typing
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: readonly number[] = [];
+
   constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
-  takeRecords() {
+
+  disconnect(): void {}
+  observe(): void {}
+  unobserve(): void {}
+  takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
-};
+}
+
+globalThis.IntersectionObserver = MockIntersectionObserver as typeof IntersectionObserver;

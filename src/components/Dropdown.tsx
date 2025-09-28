@@ -71,7 +71,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
 
     const items = listRef.current?.querySelectorAll('[role="option"]') || [];
-    const newIndex = handleKeyboardNavigation(event, {
+    const newIndex = handleKeyboardNavigation(event.nativeEvent, {
       items: Array.from(items) as HTMLElement[],
       currentIndex: highlightedIndex,
       onSelect: handleSelect,

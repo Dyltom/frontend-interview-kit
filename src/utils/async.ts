@@ -1,16 +1,14 @@
-export type Result<T, E = Error> =
-  | { ok: true; value: T }
-  | { ok: false; error: E };
+import type {
+  Result,
+  FetchOptions,
+  ThrottleOptions
+} from '@/types/utilities';
+
+export type { Result, FetchOptions } from '@/types/utilities';
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const backoff = (n: number) =>
   Math.min(2000, 200 * 2 ** (n - 1)) + Math.random() * 150;
-
-export interface FetchOptions {
-  signal?: AbortSignal;
-  retries?: number;
-  timeout?: number;
-}
 
 export async function fetchJSON<T>(
   url: string,
@@ -58,29 +56,29 @@ export async function fetchJSON<T>(
   }
 }
 
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
+export function debounce<Args extends unknown[]>(
+  fn: (...args: Args) => void,
   delay: number
-): (...args: Parameters<T>) => void {
+): (...args: Args) => void {
   let timeoutId: ReturnType<typeof setTimeout>;
 
-  return (...args: Parameters<T>) => {
+  return (...args: Args) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 }
 
-export function throttle<T extends (...args: any[]) => any>(
-  fn: T,
+export function throttle<Args extends unknown[]>(
+  fn: (...args: Args) => void,
   interval: number,
-  options: { leading?: boolean; trailing?: boolean } = {}
-): (...args: Parameters<T>) => void {
+  options: ThrottleOptions = {}
+): (...args: Args) => void {
   const { leading = true, trailing = true } = options;
   let lastTime = 0;
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  let lastArgs: Parameters<T> | null = null;
+  let lastArgs: Args | null = null;
 
-  return (...args: Parameters<T>) => {
+  return (...args: Args) => {
     const now = Date.now();
 
     if (!lastTime && !leading) {
@@ -110,13 +108,13 @@ export function throttle<T extends (...args: any[]) => any>(
   };
 }
 
-export function once<T extends (...args: any[]) => any>(
-  fn: T
-): (...args: Parameters<T>) => ReturnType<T> | undefined {
+export function once<Args extends unknown[], Return>(
+  fn: (...args: Args) => Return
+): (...args: Args) => Return | undefined {
   let called = false;
-  let result: ReturnType<T>;
+  let result: Return | undefined;
 
-  return (...args: Parameters<T>) => {
+  return (...args: Args) => {
     if (!called) {
       called = true;
       result = fn(...args);
@@ -125,14 +123,14 @@ export function once<T extends (...args: any[]) => any>(
   };
 }
 
-export function memoize<T extends (...args: any[]) => any>(
-  fn: T,
-  keyFn?: (...args: Parameters<T>) => string
-): T {
-  const cache = new Map<string, ReturnType<T>>();
-  const getKey = keyFn || ((...args: Parameters<T>) => JSON.stringify(args));
+export function memoize<Args extends unknown[], Return>(
+  fn: (...args: Args) => Return,
+  keyFn?: (...args: Args) => string
+): (...args: Args) => Return {
+  const cache = new Map<string, Return>();
+  const getKey = keyFn || ((...args: Args) => JSON.stringify(args));
 
-  return ((...args: Parameters<T>) => {
+  return (...args: Args) => {
     const key = getKey(...args);
     if (cache.has(key)) {
       return cache.get(key)!;
@@ -140,5 +138,5 @@ export function memoize<T extends (...args: any[]) => any>(
     const result = fn(...args);
     cache.set(key, result);
     return result;
-  }) as T;
+  };
 }
