@@ -1,6 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTimer } from '@hooks/useTimer';
 import { useKeyboardShortcuts } from '@hooks/useKeyboardShortcuts';
+
+const ASCII_HEADER = `
+╔═══════════════════════════════════════════════════════════╗
+║  ███╗   ███╗ █████╗ ████████╗██████╗ ██╗██╗  ██╗        ║
+║  ████╗ ████║██╔══██╗╚══██╔══╝██╔══██╗██║╚██╗██╔╝        ║
+║  ██╔████╔██║███████║   ██║   ██████╔╝██║ ╚███╔╝         ║
+║  ██║╚██╔╝██║██╔══██║   ██║   ██╔══██╗██║ ██╔██╗         ║
+║  ██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║██║██╔╝ ██╗        ║
+║  ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝        ║
+╠═══════════════════════════════════════════════════════════╣
+║           TEMPORAL DISPLACEMENT MODULE v2.0              ║
+╚═══════════════════════════════════════════════════════════╝`;
+
+const ASCII_FRAME_TOP = `┌──────────────────────────────────────┐`;
+const ASCII_FRAME_BOTTOM = `└──────────────────────────────────────┘`;
 
 export function Timer() {
   const {
@@ -15,9 +30,17 @@ export function Timer() {
     announcement
   } = useTimer();
 
+  const [isBooting, setIsBooting] = useState(true);
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const previousAnnouncementRef = useRef<string>('');
   const fastForwardRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const bootTimer = setTimeout(() => {
+      setIsBooting(false);
+    }, 2000);
+    return () => clearTimeout(bootTimer);
+  }, []);
 
   useEffect(() => {
     if (announcement !== previousAnnouncementRef.current && liveRegionRef.current) {
@@ -69,7 +92,20 @@ export function Timer() {
   }, []);
 
   return (
-    <div className="timer-container">
+    <div className={`timer-container ${isBooting ? 'booting' : ''}`}>
+      <div className="timer-ascii-frame">
+        {ASCII_HEADER}
+      </div>
+
+      <div className="terminal-status">
+        <span className={isRunning ? 'status-online' : 'status-warning'}>
+          {isRunning ? 'ACTIVE' : isPaused ? 'SUSPENDED' : 'STANDBY'}
+        </span>
+        <span className="status-indicator"></span>
+      </div>
+
+      <div className="timer-ascii-frame">{ASCII_FRAME_TOP}</div>
+
       <div
         className="timer-display"
         role="timer"
@@ -81,6 +117,8 @@ export function Timer() {
         </div>
       </div>
 
+      <div className="timer-ascii-frame">{ASCII_FRAME_BOTTOM}</div>
+
       <div className="timer-controls">
         <button
           className="control-button"
@@ -88,8 +126,9 @@ export function Timer() {
           aria-label={isRunning ? 'Pause timer' : 'Start timer'}
           aria-pressed={isRunning}
         >
-          {isRunning ? '⏸️' : '▶️'}
-          <span className="button-text">{isRunning ? 'Pause' : 'Start'}</span>
+          <span className="button-text">
+            {isRunning ? '■ PAUSE' : '▶ START'}
+          </span>
         </button>
 
         <button
@@ -97,8 +136,7 @@ export function Timer() {
           onClick={reset}
           aria-label="Reset timer"
         >
-          🔄
-          <span className="button-text">Reset</span>
+          <span className="button-text">↺ RESET</span>
         </button>
 
         <button
@@ -112,21 +150,24 @@ export function Timer() {
           role="button"
           tabIndex={0}
         >
-          ⏩
-          <span className="button-text">Fast Forward (Hold)</span>
+          <span className="button-text">≫ FAST [HOLD]</span>
         </button>
       </div>
 
       <div className="keyboard-hints">
         <div className="hint">
-          <kbd>Space</kbd> Start/Pause
+          <kbd>SPACE</kbd> START/PAUSE
         </div>
         <div className="hint">
-          <kbd>R</kbd> Reset
+          <kbd>R</kbd> RESET
         </div>
         <div className="hint">
-          <kbd>F</kbd> Fast Forward (Hold)
+          <kbd>F</kbd> FAST FORWARD
         </div>
+      </div>
+
+      <div className="timer-ascii-frame" style={{ fontSize: '0.5rem', opacity: 0.5 }}>
+        {`[ SYSTEM UPTIME: ${Math.floor(Date.now() / 1000)} ] [ CPU: 2.4% ] [ MEM: 128KB ]`}
       </div>
 
       <div

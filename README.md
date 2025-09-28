@@ -1,192 +1,202 @@
-# Precision Timer with Drift Correction
+# 🟢 MATRIX TERMINAL TIMER v2.0
 
-A high-accuracy timer application built in 60 minutes for Canva frontend interview preparation. Features drift-corrected timing, keyboard accessibility, and comprehensive test coverage.
+> *"Welcome to the Matrix."*
 
-**Live Demo**: [http://localhost:5173](http://localhost:5173) (run `npm run dev`)
+A retro Matrix-style terminal timer with drift correction, built with React + TypeScript. Features authentic CRT monitor effects, phosphor green glow, and terminal aesthetics straight from 1999.
 
-## ✨ Features
+**Live Demo**: [http://localhost:5173](http://localhost:5173)
+
+![Matrix Terminal Timer](https://img.shields.io/badge/Status-ONLINE-00ff41?style=for-the-badge&labelColor=001100)
+![Version](https://img.shields.io/badge/Version-2.0.0-00ff41?style=for-the-badge&labelColor=001100)
+![License](https://img.shields.io/badge/License-MIT-00ff41?style=for-the-badge&labelColor=001100)
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║  ███╗   ███╗ █████╗ ████████╗██████╗ ██╗██╗  ██╗        ║
+║  ████╗ ████║██╔══██╗╚══██╔══╝██╔══██╗██║╚██╗██╔╝        ║
+║  ██╔████╔██║███████║   ██║   ██████╔╝██║ ╚███╔╝         ║
+║  ██║╚██╔╝██║██╔══██║   ██║   ██╔══██╗██║ ██╔██╗         ║
+║  ██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║██║██╔╝ ██╗        ║
+║  ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝        ║
+╠═══════════════════════════════════════════════════════════╣
+║           TEMPORAL DISPLACEMENT MODULE v2.0              ║
+╚═══════════════════════════════════════════════════════════╝
+```
+
+## ⚡ Features
+
+### 🖥️ Terminal Aesthetics
+- **Authentic CRT Effects**: Scanlines, screen curve, and phosphor glow
+- **Matrix Green Theme**: Classic terminal green (#00ff41) with multiple shades
+- **ASCII Art Interface**: Box drawing characters and terminal frames
+- **Monospace Typography**: Share Tech Mono font for authentic terminal feel
+- **Boot Sequence**: Matrix-style initialization animation
 
 ### ⏱️ Timer Capabilities
-- **Drift-corrected timing** using `requestAnimationFrame` and `performance.now()`
-- **MM:SS.CS display format** with centisecond precision
-- **Start/Pause/Reset controls** with visual feedback
-- **Hold-to-fast-forward** at 4x speed
-- **Zero drift** even after long running periods
+- **Drift-Corrected Timing**: Using `requestAnimationFrame` and `performance.now()`
+- **MM:SS.CS Display**: Centisecond precision with terminal formatting
+- **4x Fast Forward**: Hold to accelerate time
+- **State Management**: Start, Pause, Reset with visual feedback
+
+### ⌨️ Controls
+- **`SPACE`** - Start/Pause timer
+- **`R`** - Reset to 00:00.00
+- **`F`** (hold) - Fast forward at 4x speed
+- **Mouse/Touch** - Click terminal buttons
 
 ### ♿ Accessibility
-- **Full keyboard support**:
-  - `Space` - Start/Pause
-  - `R` - Reset timer
-  - `F` (hold) - Fast forward at 4x speed
-- **ARIA live regions** for screen reader announcements
-- **Semantic HTML** with proper roles and labels
-- **Visual focus indicators** for keyboard navigation
-- **Responsive design** works on all screen sizes
-
-### 🧪 Testing
-- **100% test coverage** for timer logic
-- **Accessibility testing** for all interactive elements
-- **Timing accuracy tests** with mock timers
-- **Component interaction tests** using React Testing Library
-
-## 🏗 Architecture
-
-### Core Components
-
-#### `DriftCorrectedTimer` Class
-- Manages timing state and RAF lifecycle
-- Implements drift correction algorithm
-- Handles speed multiplier for fast-forward
-- Provides start/pause/reset/setSpeed methods
-
-#### `useTimer` Hook
-- React hook wrapping timer functionality
-- Manages timer state and lifecycle
-- Provides formatted time and announcements
-- Handles component unmounting cleanup
-
-#### `Timer` Component
-- Main UI component with controls
-- Keyboard event handling
-- ARIA live region management
-- Responsive layout
+- **ARIA Labels**: Full screen reader support
+- **Keyboard Navigation**: Complete keyboard control
+- **Focus Indicators**: Terminal-style focus outlines
+- **Live Regions**: Status announcements for screen readers
 
 ## 🚀 Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/frontend-interview-kit.git
+git clone https://github.com/Dyltom/matrix-terminal-timer.git
+cd timer-scheduler
 
 # Install dependencies
 npm install
 
-# Start development server
+# Start the Matrix
 npm run dev
 ```
 
-## 📝 Scripts
+Open [http://localhost:5173](http://localhost:5173) and enter the Matrix.
 
-| Command | Description |
-|---------|------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm test` | Run tests |
-| `npm run test:ui` | Run tests with UI |
-| `npm run test:coverage` | Generate coverage report |
-| `npm run typecheck` | Check TypeScript types |
-| `npm run lint` | Lint code |
-| `npm run format` | Format with Prettier |
+## 🏗️ Architecture
 
-## 🏗 Project Structure
+### Core Components
 
 ```
 src/
 ├── components/
-│   ├── Timer.tsx           # Main timer component
-│   └── Timer.test.tsx      # Component tests
+│   └── Timer.tsx           # Main timer with ASCII art
 ├── hooks/
-│   └── useTimer.ts         # Timer hook with state management
+│   └── useTimer.ts         # Timer state management
 ├── utils/
-│   ├── timer.ts            # Timer logic & drift correction
-│   └── timer.test.ts       # Timer utility tests
+│   └── timer.ts            # Drift correction algorithm
 └── styles/
-    └── timer.css           # Timer-specific styles
+    ├── matrix-terminal.css # CRT effects & theme
+    └── timer.css          # Timer-specific styles
 ```
-
-## 💡 Technical Highlights
 
 ### Drift Correction Algorithm
 
 ```typescript
-// Using performance.now() for high-precision timing
+// High-precision timing with RAF
 const now = performance.now();
 const realElapsed = now - startTime;
 const adjustedElapsed = realElapsed * speedMultiplier;
-
-// RAF ensures smooth 60fps updates
-requestAnimationFrame(() => {
-  onUpdate(adjustedElapsed);
-});
 ```
 
-### Accessibility Implementation
+## 🎨 Visual Effects
 
-```tsx
-// Live region for screen reader announcements
-<div
-  ref={liveRegionRef}
-  className="sr-only"
-  role="status"
-  aria-live="polite"
-  aria-atomic="true"
-/>
+### CRT Monitor Simulation
+- **Scanlines**: Animated horizontal scan lines
+- **Screen Curve**: Radial gradient vignetting
+- **Phosphor Glow**: Text-shadow and box-shadow effects
+- **Flicker**: Subtle opacity variations
 
-// Semantic button with proper ARIA
-<button
-  onClick={togglePlayPause}
-  aria-label={isRunning ? 'Pause timer' : 'Start timer'}
-  aria-pressed={isRunning}
->
+### Color Palette
+```css
+--matrix-black: #0a0a0a       /* Deep black background */
+--matrix-green-100: #00ff41   /* Primary Matrix green */
+--matrix-green-200: #00cc33   /* Secondary green */
+--matrix-green-300: #009926   /* Tertiary green */
+--matrix-amber: #ffb000       /* Warning/fast-forward */
+--matrix-red: #ff0040         /* Error states */
 ```
 
-### Testing Strategy
+## 🧪 Testing
 
-```typescript
-// Mock RAF for deterministic tests
-vi.spyOn(global, 'requestAnimationFrame')
-  .mockImplementation(cb => {
-    rafCallbacks.push(cb);
-    return rafCallbacks.length;
-  });
+```bash
+# Run all tests
+npm test
 
-// Test accessibility attributes
-expect(screen.getByRole('timer'))
-  .toHaveAttribute('aria-label', 'Timer at 00:00.00');
+# Run with coverage
+npm run test:coverage
+
+# Run with UI
+npm run test:ui
 ```
 
-## 🎯 60-Minute Build Process
+### Test Coverage
+- ✅ Timer drift correction logic
+- ✅ Speed multiplier calculations
+- ✅ State management transitions
+- ✅ Accessibility attributes
+- ✅ Keyboard interactions
 
-### Timeline Breakdown
-- **0-5 min**: Plan architecture and features
-- **5-15 min**: Implement core timer logic with drift correction
-- **15-25 min**: Build React component with controls
-- **25-35 min**: Add keyboard support and accessibility
-- **35-50 min**: Write comprehensive tests
-- **50-60 min**: Polish UI, documentation, and commit
+## 📊 Performance
 
-### Key Decisions
-- **requestAnimationFrame** over setInterval for accuracy
-- **performance.now()** for microsecond precision
-- **Centiseconds** display for visible timer activity
-- **Hold-to-activate** for fast-forward to prevent accidental triggers
-- **Separate utility class** for testability
+- **Zero Drift**: Maintains accuracy over extended periods
+- **60 FPS**: Smooth animations and transitions
+- **< 50ms**: Interaction response time
+- **Lightweight**: < 200KB total bundle size
 
-### Trade-offs Made
-- Focused on core timer features vs additional scheduler functionality
-- Prioritized accessibility over advanced visual effects
-- Chose comprehensive testing over additional features
+## 🛠️ Development
 
-## 🚀 Stretch Goals (Beyond 60 Minutes)
+```bash
+# Type checking
+npm run typecheck
 
-- [ ] Add lap times/split functionality
-- [ ] Persist timer state to localStorage
-- [ ] Add countdown timer mode
-- [ ] Implement scheduling with notifications
-- [ ] Add timer presets (Pomodoro, etc.)
-- [ ] Export time logs to CSV
-- [ ] Add sound effects for timer events
-- [ ] Dark mode support
+# Linting
+npm run lint
 
-## 📊 Performance Metrics
+# Format code
+npm run format
 
-- **Zero drift** after 10+ minutes of running
-- **60 FPS** smooth animations
-- **< 50ms** interaction response time
-- **100% keyboard accessible**
-- **Lighthouse Score**: 100/100 Accessibility
+# Production build
+npm run build
+```
+
+## 📦 Technologies
+
+- **React 18**: UI framework
+- **TypeScript**: Type safety
+- **Vite**: Build tooling
+- **Vitest**: Testing framework
+- **CSS3**: Animations and effects
+
+## 🎯 Original Purpose
+
+Built in 60 minutes as part of Canva frontend interview preparation, then enhanced with Matrix terminal aesthetics. Demonstrates:
+- Real-time performance optimization
+- Accessibility-first development
+- Test-driven implementation
+- Creative UI/UX design
+
+## 🚀 Future Enhancements
+
+- [ ] Matrix rain background animation
+- [ ] Sound effects (keyboard clicks, beeps)
+- [ ] Multiple timer instances
+- [ ] Save/load timer states
+- [ ] Network time synchronization
+- [ ] Terminal command input
+- [ ] Custom color themes (Amber, Blue, Red)
+- [ ] Export time logs as .txt files
+
+## 📄 License
+
+MIT © 2024
 
 ---
 
-**Built in 60 minutes** as part of Canva frontend interview preparation.
+```
+> SYSTEM MESSAGE: TIMER MODULE LOADED SUCCESSFULLY
+> STATUS: OPERATIONAL
+> DRIFT CORRECTION: ACTIVE
+> TEMPORAL DISPLACEMENT: READY
+>
+> WAKE UP, NEO...
+> THE MATRIX HAS YOU...
+> FOLLOW THE WHITE RABBIT.
+>
+> KNOCK, KNOCK, NEO.
+```
 
-**Technologies**: React, TypeScript, Vite, Vitest, requestAnimationFrame API
+**Built with ⚡ in the Matrix** | [GitHub](https://github.com/Dyltom/matrix-terminal-timer)

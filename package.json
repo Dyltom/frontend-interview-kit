@@ -1,9 +1,9 @@
 {
-  "name": "frontend-interview-kit",
-  "version": "1.0.0",
-  "description": "A comprehensive React + TypeScript boilerplate for frontend technical interviews with Canvas, accessibility, and async utilities",
+  "name": "matrix-terminal-timer",
+  "version": "2.0.0",
+  "description": "A retro Matrix-style terminal timer with drift correction, built with React + TypeScript. Features CRT effects and authentic terminal aesthetics.",
   "private": false,
-  "keywords": ["react", "typescript", "interview", "boilerplate", "canvas", "accessibility", "vite"],
+  "keywords": ["react", "typescript", "timer", "matrix", "terminal", "retro", "crt", "vite"],
   "author": "",
   "license": "MIT",
   "type": "module",

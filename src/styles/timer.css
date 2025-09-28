@@ -1,156 +1,231 @@
+/* Matrix Terminal Timer Styles */
+
 .timer-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 500px;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
 }
 
+/* Timer Display */
 .timer-display {
-  font-size: 4rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #1a1a1a;
-  letter-spacing: 0.05em;
-  user-select: none;
-  min-width: 320px;
+  font-size: 5rem;
+  font-weight: 400;
+  font-family: var(--terminal-font);
+  color: var(--matrix-green-100);
+  text-shadow: var(--glow-green);
+  letter-spacing: 0.2em;
   text-align: center;
+  margin: 2rem 0;
+  position: relative;
+  user-select: none;
+  animation: flicker 0.15s infinite;
 }
 
 .time-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  display: inline-block;
+  background: transparent;
+  position: relative;
 }
 
+.time-text::before {
+  content: "[";
+  color: var(--matrix-green-300);
+  margin-right: 0.5rem;
+  font-size: 0.8em;
+}
+
+.time-text::after {
+  content: "]";
+  color: var(--matrix-green-300);
+  margin-left: 0.5rem;
+  font-size: 0.8em;
+}
+
+/* Terminal Timer Controls */
 .timer-controls {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 1.5rem;
   justify-content: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border-top: 1px solid var(--matrix-green-400);
+  border-bottom: 1px solid var(--matrix-green-400);
 }
 
 .control-button {
+  background: transparent;
+  border: 1px solid var(--matrix-green-100);
+  color: var(--matrix-green-100);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--terminal-font);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: crosshair !important;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  gap: 0.75rem;
+}
+
+.control-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--matrix-green-100);
+  transition: left 0.3s;
+  z-index: -1;
 }
 
 .control-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  color: var(--matrix-black);
+  text-shadow: none;
+  box-shadow: var(--glow-green);
+}
+
+.control-button:hover::before {
+  left: 0;
 }
 
 .control-button:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .control-button:focus-visible {
-  outline: 3px solid #667eea;
+  outline: 1px solid var(--matrix-green-100);
   outline-offset: 2px;
 }
 
+/* Active/Pressed State */
 .control-button[aria-pressed="true"] {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: var(--matrix-green-100);
+  color: var(--matrix-black);
+  box-shadow: var(--glow-green);
 }
 
+/* Fast Forward Active */
 .control-button.fast-forward:active {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  transform: scale(1.05);
+  background: var(--matrix-amber);
+  color: var(--matrix-black);
+  border-color: var(--matrix-amber);
+  box-shadow: var(--glow-amber);
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 .button-text {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
 }
 
+/* Remove emoji, use text symbols */
+.control-button::after {
+  font-family: var(--terminal-font);
+  margin-left: 0.5rem;
+}
+
+/* Keyboard Hints Terminal Style */
 .keyboard-hints {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
   padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: #666;
+  background: rgba(0, 255, 65, 0.05);
+  border: 1px dashed var(--matrix-green-400);
+  font-size: 0.75rem;
+  font-family: var(--terminal-font);
+  color: var(--matrix-green-200);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .hint {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+
+.hint::before {
+  content: ">";
+  color: var(--matrix-green-100);
+  animation: blink 1s infinite;
 }
 
 kbd {
   padding: 0.25rem 0.5rem;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  background: var(--matrix-black);
+  border: 1px solid var(--matrix-green-100);
+  color: var(--matrix-green-100);
+  font-family: var(--terminal-font);
   font-size: 0.75rem;
-  font-weight: 600;
-  box-shadow: 0 2px 0 #ddd;
+  font-weight: 400;
+  box-shadow: inset 0 0 5px rgba(0, 255, 65, 0.2);
+  text-transform: uppercase;
 }
 
-.sr-only {
+/* Terminal Status Line */
+.terminal-status {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-.app {
-  min-height: 100vh;
+  top: -2rem;
+  left: 0;
+  right: 0;
+  font-size: 0.75rem;
+  color: var(--matrix-green-200);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--matrix-green-400);
+  opacity: 0.8;
 }
 
-.app h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.terminal-status::before {
+  content: "SYSTEM STATUS: ";
+  color: var(--matrix-green-300);
 }
 
-.subtitle {
-  color: #666;
-  margin-bottom: 2rem;
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--matrix-green-100);
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  animation: pulse 2s infinite;
+  box-shadow: var(--glow-green-soft);
 }
 
+/* ASCII Decoration */
+.timer-ascii-frame {
+  color: var(--matrix-green-300);
+  font-size: 0.6rem;
+  line-height: 1;
+  white-space: pre;
+  opacity: 0.6;
+  user-select: none;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* Mobile Responsive */
 @media (max-width: 640px) {
   .timer-display {
     font-size: 3rem;
-    min-width: 240px;
   }
 
   .timer-controls {
     flex-direction: column;
-    width: 100%;
+    gap: 0.75rem;
   }
 
   .control-button {
@@ -161,5 +236,53 @@ kbd {
   .keyboard-hints {
     flex-direction: column;
     gap: 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Boot Animation */
+.timer-container.booting {
+  animation: boot-sequence 2s ease-out;
+}
+
+.timer-container.booting .timer-display {
+  animation: typing 1s steps(10, end);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Glitch Effect on Error */
+.timer-display.error {
+  animation: glitch 0.3s infinite;
+  color: var(--matrix-red);
+}
+
+/* System Messages */
+.system-message {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 17, 0, 0.95);
+  border: 1px solid var(--matrix-green-100);
+  padding: 1rem 2rem;
+  color: var(--matrix-green-100);
+  font-family: var(--terminal-font);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  box-shadow: var(--glow-green-soft);
+  animation: slideUp 0.3s ease-out;
+  z-index: 1000;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateX(-50%) translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
   }
 }
