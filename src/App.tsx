@@ -1,19 +1,10 @@
-import { useState } from 'react';
-
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="app">
-      <h1>Frontend Interview Kit</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          Count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
+      <h1>React + TypeScript Boilerplate</h1>
+      <p>
+        Start building your application by editing <code>src/App.tsx</code>
+      </p>
     </div>
   );
 }
