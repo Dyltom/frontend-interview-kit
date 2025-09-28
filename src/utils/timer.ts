@@ -10,6 +10,7 @@ export class DriftCorrectedTimer {
   private frameId: number | null = null;
   private lastFrameTime: number = 0;
   private onUpdate: (elapsed: number) => void;
+  private currentState: TimerState | null = null;
 
   constructor(onUpdate: (elapsed: number) => void) {
     this.onUpdate = onUpdate;
@@ -20,18 +21,22 @@ export class DriftCorrectedTimer {
 
     const now = performance.now();
     const startTime = state.pausedAt !== null
-      ? now - state.elapsed
+      ? now - (state.elapsed / state.speedMultiplier)
       : now;
 
     this.lastFrameTime = now;
-    this.scheduleNextFrame(state.elapsed, startTime, state.speedMultiplier);
 
-    return {
+    const newState = {
       ...state,
       startTime,
       pausedAt: null,
       isRunning: true
     };
+
+    this.currentState = newState;
+    this.scheduleNextFrame();
+
+    return newState;
   }
 
   pause(state: TimerState): TimerState {
@@ -39,55 +44,70 @@ export class DriftCorrectedTimer {
 
     this.stop();
 
-    return {
+    const newState = {
       ...state,
       pausedAt: performance.now(),
       isRunning: false
     };
+
+    this.currentState = newState;
+    return newState;
   }
 
   reset(): TimerState {
     this.stop();
 
-    return {
+    const newState = {
       startTime: null,
       pausedAt: null,
       elapsed: 0,
       isRunning: false,
       speedMultiplier: 1
     };
+
+    this.currentState = newState;
+    return newState;
   }
 
   setSpeedMultiplier(state: TimerState, multiplier: number): TimerState {
     if (!state.isRunning || !state.startTime) {
-      return { ...state, speedMultiplier: multiplier };
+      const newState = { ...state, speedMultiplier: multiplier };
+      this.currentState = newState;
+      return newState;
     }
 
     const now = performance.now();
-    const actualElapsed = now - state.startTime;
-    const adjustedElapsed = state.elapsed;
+    // Calculate the current elapsed time at the old speed
+    const currentElapsed = (now - state.startTime) * state.speedMultiplier;
 
-    const newStartTime = now - (adjustedElapsed / multiplier);
+    // Calculate new start time to maintain continuity
+    const newStartTime = now - (currentElapsed / multiplier);
 
-    return {
+    const newState = {
       ...state,
       startTime: newStartTime,
+      elapsed: currentElapsed,
       speedMultiplier: multiplier
     };
+
+    this.currentState = newState;
+    return newState;
   }
 
-  private scheduleNextFrame(baseElapsed: number, startTime: number, speedMultiplier: number) {
+  private scheduleNextFrame() {
     this.frameId = requestAnimationFrame(() => {
-      const now = performance.now();
-      const deltaTime = now - this.lastFrameTime;
+      if (!this.currentState || !this.currentState.isRunning || !this.currentState.startTime) {
+        return;
+      }
 
-      const realElapsed = now - startTime;
-      const adjustedElapsed = realElapsed * speedMultiplier;
+      const now = performance.now();
+      const realElapsed = now - this.currentState.startTime;
+      const adjustedElapsed = realElapsed * this.currentState.speedMultiplier;
 
       this.onUpdate(adjustedElapsed);
       this.lastFrameTime = now;
 
-      this.scheduleNextFrame(baseElapsed, startTime, speedMultiplier);
+      this.scheduleNextFrame();
     });
   }
 
