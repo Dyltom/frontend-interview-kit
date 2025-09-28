@@ -3,43 +3,50 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [showBoot, setShowBoot] = useState(true);
+  const [showTimer, setShowTimer] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const bootTimer = setTimeout(() => {
       setShowBoot(false);
-    }, 3500);
-    return () => clearTimeout(timer);
+      setTimeout(() => {
+        setShowTimer(true);
+      }, 500);
+    }, 4000);
+    return () => clearTimeout(bootTimer);
   }, []);
 
   return (
     <>
       <div className="crt-monitor"></div>
       <div className="terminal-screen">
-        <div className="terminal-window">
-          {showBoot && (
-            <div className="boot-sequence" style={{ marginBottom: '2rem' }}>
+        {showBoot ? (
+          <div className="boot-sequence-container">
+            <div className="boot-sequence">
               <div className="terminal-text typing-text">
                 {'> INITIALISING MATRIX TERMINAL v2.0...'}<span className="cursor"></span>
               </div>
-              <div className="terminal-text" style={{ opacity: 0.7, fontSize: '0.875rem', marginTop: '0.5rem', animationDelay: '0.5s' }}>
+              <div className="terminal-text" style={{ animationDelay: '0.8s' }}>
                 {'> LOADING TEMPORAL DISPLACEMENT MODULE...'}
               </div>
-              <div className="terminal-text" style={{ opacity: 0.5, fontSize: '0.875rem', marginTop: '0.25rem', animationDelay: '1s' }}>
+              <div className="terminal-text" style={{ animationDelay: '1.4s' }}>
                 {'> CALIBRATING DRIFT CORRECTION ALGORITHMS...'}
               </div>
-              <div className="terminal-text" style={{ opacity: 0.3, fontSize: '0.875rem', marginTop: '0.25rem', animationDelay: '1.5s' }}>
+              <div className="terminal-text" style={{ animationDelay: '2s' }}>
                 {'> SYNCHRONISING QUANTUM TIME MATRICES...'}
               </div>
-              <div className="terminal-text" style={{ opacity: 0.3, fontSize: '0.875rem', marginTop: '0.25rem', animationDelay: '2s' }}>
+              <div className="terminal-text" style={{ animationDelay: '2.6s' }}>
                 {'> ESTABLISHING SECURE CONNECTION...'}
               </div>
-              <div className="terminal-text" style={{ opacity: 0.7, fontSize: '0.875rem', marginTop: '0.5rem', animationDelay: '2.5s', color: 'var(--matrix-green-100)' }}>
+              <div className="terminal-text system-ready" style={{ animationDelay: '3.2s' }}>
                 {'> SYSTEM READY'}
               </div>
             </div>
-          )}
-          <Timer />
-        </div>
+          </div>
+        ) : (
+          <div className={`terminal-window ${showTimer ? 'fade-in' : ''}`}>
+            <Timer />
+          </div>
+        )}
       </div>
     </>
   );

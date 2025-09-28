@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTimer } from '@hooks/useTimer';
 import { useKeyboardShortcuts } from '@hooks/useKeyboardShortcuts';
 
@@ -28,17 +28,9 @@ export function Timer() {
     announcement
   } = useTimer();
 
-  const [isBooting, setIsBooting] = useState(true);
   const liveRegionRef = useRef<HTMLDivElement>(null);
   const previousAnnouncementRef = useRef<string>('');
   const fastForwardRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    const bootTimer = setTimeout(() => {
-      setIsBooting(false);
-    }, 3500);
-    return () => clearTimeout(bootTimer);
-  }, []);
 
   useEffect(() => {
     if (announcement !== previousAnnouncementRef.current && liveRegionRef.current) {
@@ -90,7 +82,7 @@ export function Timer() {
   }, [handleFastForwardUp]);
 
   return (
-    <div className={`timer-container ${isBooting ? 'booting' : ''}`}>
+    <div className="timer-container">
       <div className="timer-ascii-frame">
         {ASCII_HEADER}
       </div>
