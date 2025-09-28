@@ -3,7 +3,7 @@ import { DriftCorrectedTimer, TimerState } from './timer';
 
 describe('Timer Fast-Forward', () => {
   let timer: DriftCorrectedTimer;
-  let onUpdate: ReturnType<typeof vi.fn>;
+  let onUpdate: ReturnType<typeof vi.fn<[number], void>>;
   let rafSpy: ReturnType<typeof vi.spyOn>;
   let performanceSpy: ReturnType<typeof vi.spyOn>;
   let rafCallbacks: Array<FrameRequestCallback> = [];
@@ -12,7 +12,7 @@ describe('Timer Fast-Forward', () => {
     // Execute the first callback in the queue
     if (rafCallbacks.length > 0) {
       const cb = rafCallbacks[0];
-      cb(performance.now());
+      cb?.(performance.now());
     }
   };
 
@@ -22,14 +22,14 @@ describe('Timer Fast-Forward', () => {
     timer = new DriftCorrectedTimer(onUpdate);
 
     let rafId = 0;
-    rafSpy = vi.spyOn(global, 'requestAnimationFrame').mockImplementation((cb) => {
+    rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
       rafCallbacks.push(cb);
       return ++rafId;
-    });
+    }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    vi.spyOn(global, 'cancelAnimationFrame').mockImplementation(() => {});
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
 
-    performanceSpy = vi.spyOn(performance, 'now').mockReturnValue(0);
+    performanceSpy = vi.spyOn(performance, 'now').mockReturnValue(0) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
   });
 
   afterEach(() => {
@@ -95,7 +95,7 @@ describe('Timer Fast-Forward', () => {
 
       // With 4x speed from the 1-second mark, the next second should show 4 seconds of progress
       // So total should be around 5000ms (1000ms normal + 4000ms fast)
-      const lastCall = onUpdate.mock.calls[onUpdate.mock.calls.length - 1][0];
+      const lastCall = onUpdate.mock.calls[onUpdate.mock.calls.length - 1]?.[0] as number;
       expect(lastCall).toBeGreaterThanOrEqual(4000);
       expect(lastCall).toBeLessThanOrEqual(5000);
     });
@@ -154,7 +154,7 @@ describe('Timer Fast-Forward', () => {
       executeRaf();
 
       // Should be 4000 + 1000 = 5000
-      const lastCall = onUpdate.mock.calls[onUpdate.mock.calls.length - 1][0];
+      const lastCall = onUpdate.mock.calls[onUpdate.mock.calls.length - 1]?.[0] as number;
       expect(lastCall).toBeGreaterThanOrEqual(4900);
       expect(lastCall).toBeLessThanOrEqual(5100);
     });
@@ -175,7 +175,7 @@ describe('Timer Fast-Forward', () => {
 
       // When resuming, should use the new speed
       performanceSpy.mockReturnValue(2000);
-      const resumedState = timer.start(ffState);
+      timer.start(ffState);
 
       performanceSpy.mockReturnValue(3000);
       executeRaf();

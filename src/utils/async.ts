@@ -24,6 +24,7 @@ export async function fetchJSON<T>(
   }
 
   try {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       try {
         const res = await fetch(url, { signal: controller.signal });

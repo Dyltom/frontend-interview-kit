@@ -8,7 +8,6 @@ export interface TimerState {
 
 export class DriftCorrectedTimer {
   private frameId: number | null = null;
-  private lastFrameTime: number = 0;
   private onUpdate: (elapsed: number) => void;
   private currentState: TimerState | null = null;
 
@@ -23,8 +22,6 @@ export class DriftCorrectedTimer {
     const startTime = state.pausedAt !== null
       ? now - (state.elapsed / state.speedMultiplier)
       : now;
-
-    this.lastFrameTime = now;
 
     const newState = {
       ...state,
@@ -105,7 +102,6 @@ export class DriftCorrectedTimer {
       const adjustedElapsed = realElapsed * this.currentState.speedMultiplier;
 
       this.onUpdate(adjustedElapsed);
-      this.lastFrameTime = now;
 
       this.scheduleNextFrame();
     });

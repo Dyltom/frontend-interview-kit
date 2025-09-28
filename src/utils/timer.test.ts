@@ -47,7 +47,7 @@ describe('Timer Utils', () => {
 
   describe('DriftCorrectedTimer', () => {
     let timer: DriftCorrectedTimer;
-    let onUpdate: ReturnType<typeof vi.fn>;
+    let onUpdate: ReturnType<typeof vi.fn<[number], void>>;
     let rafSpy: ReturnType<typeof vi.spyOn>;
     let cafSpy: ReturnType<typeof vi.spyOn>;
     let performanceSpy: ReturnType<typeof vi.spyOn>;
@@ -58,14 +58,14 @@ describe('Timer Utils', () => {
       onUpdate = vi.fn();
       timer = new DriftCorrectedTimer(onUpdate);
 
-      rafSpy = vi.spyOn(global, 'requestAnimationFrame').mockImplementation((cb) => {
+      rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
         rafCallbacks.push(cb);
         return rafCallbacks.length;
-      });
+      }) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      cafSpy = vi.spyOn(global, 'cancelAnimationFrame').mockImplementation(() => {});
+      cafSpy = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {}) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      performanceSpy = vi.spyOn(performance, 'now').mockReturnValue(1000);
+      performanceSpy = vi.spyOn(performance, 'now').mockReturnValue(1000) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
     });
 
     afterEach(() => {
@@ -228,7 +228,7 @@ describe('Timer Utils', () => {
         timer.start(initialState);
 
         performanceSpy.mockReturnValue(1500);
-        rafCallbacks[0](1500);
+        rafCallbacks[0]?.(1500);
 
         expect(onUpdate).toHaveBeenCalledWith(500);
       });
@@ -245,7 +245,7 @@ describe('Timer Utils', () => {
         timer.start(initialState);
 
         performanceSpy.mockReturnValue(1250);
-        rafCallbacks[0](1250);
+        rafCallbacks[0]?.(1250);
 
         expect(onUpdate).toHaveBeenCalledWith(1000);
       });

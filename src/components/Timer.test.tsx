@@ -17,6 +17,7 @@ vi.mock('@hooks/useKeyboardShortcuts', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (useTimerModule.useTimer as any).mockReturnValue({
     formattedTime: '00:00.00',
     isRunning: false,
@@ -83,6 +84,7 @@ describe('Timer Component', () => {
 
   describe('Running state', () => {
     it('shows pause button when running', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (useTimerModule.useTimer as any).mockReturnValue({
         formattedTime: '00:05.00',
         isRunning: true,

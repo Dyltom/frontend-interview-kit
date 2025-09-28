@@ -114,7 +114,7 @@ export function mockResizeObserver() {
     observe = vi.fn();
     unobserve = vi.fn();
     disconnect = vi.fn();
-  } as any;
+  } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 /**

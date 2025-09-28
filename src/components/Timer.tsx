@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTimer } from '@hooks/useTimer';
 import { useKeyboardShortcuts } from '@hooks/useKeyboardShortcuts';
 
@@ -22,8 +22,6 @@ export function Timer() {
     formattedTime,
     isRunning,
     isPaused,
-    start,
-    pause,
     reset,
     togglePlayPause,
     setFastForward,
@@ -56,12 +54,12 @@ export function Timer() {
     }
   };
 
-  const handleFastForwardUp = () => {
+  const handleFastForwardUp = useCallback(() => {
     if (fastForwardRef.current) {
       fastForwardRef.current = false;
       setFastForward(false);
     }
-  };
+  }, [setFastForward]);
 
   useKeyboardShortcuts({
     ' ': (e) => {
@@ -89,7 +87,7 @@ export function Timer() {
 
     window.addEventListener('keyup', handleKeyUp);
     return () => window.removeEventListener('keyup', handleKeyUp);
-  }, []);
+  }, [handleFastForwardUp]);
 
   return (
     <div className={`timer-container ${isBooting ? 'booting' : ''}`}>
