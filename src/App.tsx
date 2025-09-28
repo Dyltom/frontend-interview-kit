@@ -42,11 +42,11 @@ function App() {
               </div>
             </div>
           </div>
-        ) : (
-          <div className={`terminal-window ${showTimer ? 'fade-in' : ''}`}>
+        ) : showTimer ? (
+          <div className="terminal-window fade-in">
             <Timer />
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );
