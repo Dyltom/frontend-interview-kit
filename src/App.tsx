@@ -1,10 +1,11 @@
+import { Timer } from '@components/Timer';
+
 function App() {
   return (
     <div className="app">
-      <h1>React + TypeScript Boilerplate</h1>
-      <p>
-        Start building your application by editing <code>src/App.tsx</code>
-      </p>
+      <h1>Precision Timer</h1>
+      <p className="subtitle">Drift-corrected timer with keyboard controls</p>
+      <Timer />
     </div>
   );
 }
