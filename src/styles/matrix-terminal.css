@@ -180,6 +180,32 @@ body {
   height: 100%;
 }
 
+/* Boot sequence styling */
+.boot-sequence {
+  color: var(--matrix-green-100);
+  font-family: var(--terminal-font);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+}
+
+.terminal-text {
+  animation: fadeIn 0.5s ease-in;
+  overflow: hidden;
+  display: block;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.typing-text {
+  animation: typing 1s steps(40, end);
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 1 !important;
+}
+
 /* Animations */
 @keyframes flicker {
   0% { opacity: 0.97; }
@@ -200,6 +226,17 @@ body {
 @keyframes typing {
   from { width: 0; }
   to { width: 100%; }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes boot-sequence {

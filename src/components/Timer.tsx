@@ -36,7 +36,7 @@ export function Timer() {
   useEffect(() => {
     const bootTimer = setTimeout(() => {
       setIsBooting(false);
-    }, 2000);
+    }, 3500);
     return () => clearTimeout(bootTimer);
   }, []);
 
