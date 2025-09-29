@@ -3,7 +3,16 @@
   "version": "2.0.0",
   "description": "A retro Matrix-style terminal timer with drift correction, built with React + TypeScript. Features CRT effects and authentic terminal aesthetics.",
   "private": false,
-  "keywords": ["react", "typescript", "timer", "matrix", "terminal", "retro", "crt", "vite"],
+  "keywords": [
+    "react",
+    "typescript",
+    "timer",
+    "matrix",
+    "terminal",
+    "retro",
+    "crt",
+    "vite"
+  ],
   "author": "",
   "license": "MIT",
   "type": "module",
@@ -19,6 +28,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\""
   },
   "dependencies": {
+    "neo-terminal-ui": "file:../neo-terminal-ui",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

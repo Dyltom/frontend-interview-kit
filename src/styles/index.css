@@ -1,5 +1,6 @@
 @import './matrix-terminal.css';
 @import './timer.css';
+@import './timer-overrides.css';
 
 /* Base Reset */
 * {

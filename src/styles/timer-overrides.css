@@ -1,0 +1,92 @@
+/* Timer Component Overrides for neo-terminal-ui */
+
+/* Override Button component styles to match original design */
+.timer-controls .control-button {
+  /* Reset neo-terminal-ui styles */
+  all: unset;
+
+  /* Apply original control-button styles */
+  background: transparent !important;
+  border: 1px solid var(--matrix-green-100) !important;
+  color: var(--matrix-green-100) !important;
+  padding: 0.625rem 1.25rem !important;
+  font-family: var(--terminal-font) !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  cursor: url('/cursor-pointer.svg') 10 8, pointer !important;
+  transition: all 0.2s !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 120px !important;
+  box-sizing: border-box !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.timer-controls .control-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--matrix-green-100);
+  transition: left 0.3s;
+  z-index: -1;
+}
+
+.timer-controls .control-button:hover {
+  color: var(--matrix-black) !important;
+  text-shadow: none !important;
+  box-shadow: var(--glow-green) !important;
+  background: transparent !important;
+}
+
+.timer-controls .control-button:hover::before {
+  left: 0;
+}
+
+.timer-controls .control-button:active {
+  transform: scale(0.98) !important;
+}
+
+.timer-controls .control-button:focus-visible {
+  outline: 1px solid var(--matrix-green-100) !important;
+  outline-offset: 2px !important;
+}
+
+/* Active/Pressed State */
+.timer-controls .control-button[aria-pressed="true"] {
+  background: var(--matrix-green-100) !important;
+  color: var(--matrix-black) !important;
+  box-shadow: var(--glow-green) !important;
+}
+
+/* Fast Forward Active */
+.timer-controls .control-button.fast-forward:active {
+  background: var(--matrix-amber) !important;
+  color: var(--matrix-black) !important;
+  border-color: var(--matrix-amber) !important;
+  box-shadow: var(--glow-amber) !important;
+  animation: pulse 0.5s infinite !important;
+}
+
+/* Ensure button text is properly styled */
+.timer-controls .control-button .button-text {
+  font-size: 0.75rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: inherit !important;
+}
+
+/* Override any padding/margin from neo-terminal-ui */
+.timer-controls .control-button > span {
+  all: unset;
+  display: inline;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.1em !important;
+}

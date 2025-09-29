@@ -15,6 +15,76 @@ vi.mock('@hooks/useKeyboardShortcuts', () => ({
   useKeyboardShortcuts: vi.fn()
 }));
 
+// Mock neo-terminal-ui components
+vi.mock('neo-terminal-ui', () => ({
+  Button: ({ children, onClick, onMouseDown, onMouseUp, onMouseLeave, onTouchStart, onTouchEnd, ...props }: any) => (
+    <button
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      data-testid="neo-terminal-button"
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+  TerminalStatus: ({ customLabel, status, unstyled }: any) => (
+    unstyled ? (
+      <>
+        <span className={status === 'online' ? 'status-online' : 'status-warning'}>
+          {customLabel}
+        </span>
+        <span className="status-indicator" />
+      </>
+    ) : (
+      <div data-testid="terminal-status">
+        {customLabel}
+      </div>
+    )
+  ),
+  SystemInfo: ({ uptime, cpu, memory, className }: any) => (
+    <div data-testid="system-info" className={className}>
+      {`[ SYSTEM UPTIME: ${uptime} ] [ CPU: ${cpu}% ] [ MEM: ${memory} ]`}
+    </div>
+  ),
+  ASCIIBorder: ({ children, className }: any) => (
+    <>
+      <div className={className}>┌──────────────────────────────────────┐</div>
+      {children}
+      <div className={className}>└──────────────────────────────────────┘</div>
+    </>
+  ),
+  ASCIIHeader: ({ children, className }: any) => (
+    <div className={className} data-testid="ascii-header">
+      {children}
+    </div>
+  ),
+  TimerDisplay: ({ time, className }: any) => (
+    <div className={className} role="timer" aria-label={`Timer at ${time}`} data-testid="timer-display">
+      <div className="time-text">
+        {time}
+      </div>
+    </div>
+  ),
+  KeyboardHints: ({ hints, className }: any) => (
+    <div className={className} data-testid="keyboard-hints">
+      {hints.map((hint: any, i: number) => (
+        <div key={i} className="hint">
+          <kbd>{hint.key}</kbd> {hint.label}
+        </div>
+      ))}
+    </div>
+  ),
+  TimerContainer: ({ children, className }: any) => (
+    <div className={className} data-testid="timer-container">
+      {children}
+    </div>
+  )
+}));
+
 beforeEach(() => {
   vi.clearAllMocks();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,6 +102,16 @@ beforeEach(() => {
 });
 
 describe('Timer Component', () => {
+  describe('Component Integration', () => {
+    it('uses neo-terminal-ui Button components for controls', () => {
+      render(<Timer />);
+
+      // Check that all control buttons use neo-terminal-ui Button
+      const buttons = screen.getAllByTestId('neo-terminal-button');
+      expect(buttons).toHaveLength(3); // Start/Pause, Reset, Fast Forward
+    });
+  });
+
   describe('Accessibility', () => {
     it('renders timer with correct ARIA attributes', () => {
       render(<Timer />);
@@ -59,14 +139,14 @@ describe('Timer Component', () => {
     it('includes keyboard hints', () => {
       const { container } = render(<Timer />);
 
-      expect(screen.getByText('Space')).toBeInTheDocument();
-      expect(screen.getByText('Start/Pause')).toBeInTheDocument();
+      expect(screen.getByText('SPACE')).toBeInTheDocument();
+      expect(screen.getByText('START/PAUSE')).toBeInTheDocument();
       expect(screen.getByText('R')).toBeInTheDocument();
 
       const hintsSection = container.querySelector('.keyboard-hints');
       expect(hintsSection).toBeInTheDocument();
-      expect(hintsSection).toHaveTextContent('Reset');
-      expect(hintsSection).toHaveTextContent('Fast Forward (Hold)');
+      expect(hintsSection).toHaveTextContent('RESET');
+      expect(hintsSection).toHaveTextContent('FAST FORWARD');
 
       expect(screen.getByText('F')).toBeInTheDocument();
     });
@@ -102,7 +182,7 @@ describe('Timer Component', () => {
       const pauseButton = screen.getByLabelText('Pause timer');
       expect(pauseButton).toBeInTheDocument();
       expect(pauseButton).toHaveAttribute('aria-pressed', 'true');
-      expect(pauseButton).toHaveTextContent('Pause');
+      expect(pauseButton).toHaveTextContent('■ PAUSE');
     });
   });
 

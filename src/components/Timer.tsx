@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useTimer } from '@hooks/useTimer';
 import { useKeyboardShortcuts } from '@hooks/useKeyboardShortcuts';
+import {
+  Button,
+  TerminalStatus,
+  SystemInfo,
+  ASCIIBorder,
+  ASCIIHeader,
+  TimerDisplay,
+  KeyboardHints,
+  TimerContainer
+} from 'neo-terminal-ui';
 
 const ASCII_HEADER = `
 ╔═══════════════════════════════════════════════════════════╗
@@ -14,8 +24,6 @@ const ASCII_HEADER = `
 ║           TEMPORAL DISPLACEMENT MODULE v2.0              ║
 ╚═══════════════════════════════════════════════════════════╝`;
 
-const ASCII_FRAME_TOP = `┌──────────────────────────────────────┐`;
-const ASCII_FRAME_BOTTOM = `└──────────────────────────────────────┘`;
 
 export function Timer() {
   const {
@@ -82,82 +90,79 @@ export function Timer() {
   }, [handleFastForwardUp]);
 
   return (
-    <div className="timer-container">
-      <div className="timer-ascii-frame">
+    <TimerContainer className="timer-container">
+      <ASCIIHeader className="timer-ascii-frame" color="green-300">
         {ASCII_HEADER}
-      </div>
+      </ASCIIHeader>
 
       <div className="terminal-status">
-        <span className={isRunning ? 'status-online' : 'status-warning'}>
-          {isRunning ? 'ACTIVE' : isPaused ? 'SUSPENDED' : 'STANDBY'}
-        </span>
-        <span className="status-indicator"></span>
+        <TerminalStatus
+          status={isRunning ? 'online' : isPaused ? 'warning' : 'idle'}
+          customLabel={isRunning ? 'ACTIVE' : isPaused ? 'SUSPENDED' : 'STANDBY'}
+          showIndicator={true}
+          unstyled={true}
+        />
       </div>
 
-      <div className="timer-ascii-frame">{ASCII_FRAME_TOP}</div>
-
-      <div
-        className="timer-display"
-        role="timer"
-        aria-label={`Timer at ${formattedTime}`}
-        aria-live="off"
-      >
-        <div className="time-text" aria-hidden="true">
-          {formattedTime}
-        </div>
-      </div>
-
-      <div className="timer-ascii-frame">{ASCII_FRAME_BOTTOM}</div>
+      <ASCIIBorder style="single" width={40} color="green-300" className="timer-ascii-frame">
+        <TimerDisplay
+          time={formattedTime}
+          className="timer-display"
+          showBrackets={true}
+          ariaLabel={`Timer at ${formattedTime}`}
+        />
+      </ASCIIBorder>
 
       <div className="timer-controls">
-        <button
-          className="control-button"
+        <Button
           onClick={togglePlayPause}
           aria-label={isRunning ? 'Pause timer' : 'Start timer'}
           aria-pressed={isRunning}
-        >
-          <span className="button-text">
-            {isRunning ? '■ PAUSE' : '▶ START'}
-          </span>
-        </button>
-
-        <button
+          variant="outline"
           className="control-button"
+        >
+          <span className="button-text">{isRunning ? '■ PAUSE' : '▶ START'}</span>
+        </Button>
+
+        <Button
           onClick={reset}
           aria-label="Reset timer"
+          variant="outline"
+          className="control-button"
         >
           <span className="button-text">↺ RESET</span>
-        </button>
+        </Button>
 
-        <button
-          className="control-button fast-forward"
+        <Button
           onMouseDown={handleFastForwardDown}
           onMouseUp={handleFastForwardUp}
           onMouseLeave={handleFastForwardUp}
           onTouchStart={handleFastForwardDown}
           onTouchEnd={handleFastForwardUp}
           aria-label="Hold to fast forward"
-          role="button"
-          tabIndex={0}
+          variant="outline"
+          className="control-button fast-forward"
         >
           <span className="button-text">≫ FAST [HOLD]</span>
-        </button>
+        </Button>
       </div>
 
-      <div className="keyboard-hints">
-        <div className="hint">
-          <kbd>SPACE</kbd> START/PAUSE
-        </div>
-        <div className="hint">
-          <kbd>R</kbd> RESET
-        </div>
-        <div className="hint">
-          <kbd>F</kbd> FAST FORWARD
-        </div>
-      </div>
+      <KeyboardHints
+        hints={[
+          { key: 'SPACE', label: 'START/PAUSE' },
+          { key: 'R', label: 'RESET' },
+          { key: 'F', label: 'FAST FORWARD' }
+        ]}
+        className="keyboard-hints"
+      />
 
-      <div className="timer-ascii-frame" style={{ fontSize: '0.5rem', opacity: 0.5 }}>
-        {`[ SYSTEM UPTIME: ${Math.floor(Date.now() / 1000)} ] [ CPU: 2.4% ] [ MEM: 128KB ]`}
+      <div style={{ fontSize: '0.5rem', opacity: 0.5 }}>
+        <SystemInfo
+          uptime={Math.floor(Date.now() / 1000)}
+          cpu={2.4}
+          memory="128KB"
+          className="timer-ascii-frame"
+        />
       </div>
 
       <div
@@ -167,6 +172,6 @@ export function Timer() {
         aria-live="polite"
         aria-atomic="true"
       />
-    </div>
+    </TimerContainer>
   );
 }
